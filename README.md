@@ -25,17 +25,31 @@ Register the bundle in `app/AppKernel.php`:
         );
     }
 
-Add the following line to `app/config/config.yml`:
+Add the following to your application configuration (e.g. `app/config/config.yml`):
 
-	imports:
-		- { resource: @OhInstagramBundle/Resources/config/services.yml }
+```yaml
+oh_instagram:
+	instaphp:
+		config:
+			# Required: your Instagram client id/secret
+			client_id: %instagram_client%
+			client_secret: %instagram_secret%
 
-Add the following config to your parameters.yml:
-
-    instagram_api_client_id: YOUR_API_ID
-    instagram_api_client_secret: YOUR_API_SECRET
-    instagram_timeout: 30
-    instagram_connect_timeout: 8
+			# Optional, defaults shown:
+			# Instagram API version and endpoint
+			version: v1
+			endpoint: https://api.instagram.com
+			# OAuth settings
+			scope: comments+likes+relationships
+			oauth_path: /oauth/authorize/?client_id={client_id}&amp;response_type=code&amp;redirect_uri={redirect_uri}
+			oauth_token_path: /oauth/access_token/
+			# Where to redirect after returning from OAuth authorization
+			redirect_route: OhInstagramBundle_callback
+			# Guzzle timeouts and logging
+			http_timeout: 6
+			http_connect_timeout: 2
+			log_path: '%kernel.logs_dir%/instaphp-%kernel.environment%.log'
+```
 
 And if you're OK with the provided routes, add these to `app/config/routing.yml`
 
